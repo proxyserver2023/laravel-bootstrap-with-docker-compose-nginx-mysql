@@ -1,0 +1,60 @@
+version: '3'
+services:
+    
+    # PHP Service
+    app:
+        build: ./.config/php
+        container_name: CORE_PHP
+        restart: unless-stopped
+        tty: true
+        env_file:
+            - "./.env"
+        networks:
+            - app-network
+        volumes:
+            - "./www:/var/www"
+            - "./config/php-fpm/php.ini:/usr/local/etc/php/php.ini:ro"
+
+    # Nginx Service
+    webserver:
+        image: nginx:alpine
+        container_name: CORE_NGINX
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "80:80"
+            - "443:443"
+        networks:
+            - app-network
+        volumes:
+            - "./www:/var/www"
+            - "./.config/nginx/nginx.conf:/etc/nginx/nginx.conf:ro"
+            - "./.config/nginx/conf.d/:/etc/nginx/conf.d/:ro"
+            # - "./.config/nginx/.htpasswd:/etc/nginx/.htpasswd:ro"
+
+    #MySQL Service
+    mysql:
+        image: mysql:5.7.22
+        container_name: CORE_MYSQL
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: test
+            MYSQL_ROOT_PASSWORD: HotBoy
+        networks:
+            - app-network
+        volumes:
+            - dbdata:/var/lib/mysql
+            - "./.config/mysql/my.cnf:/etc/mysql/my.cnf"
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
+
+#Docker Volumes
+volumes:
+  dbdata:
+    driver: local
