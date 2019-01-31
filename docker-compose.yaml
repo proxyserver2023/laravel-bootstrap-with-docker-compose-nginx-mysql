@@ -3,17 +3,17 @@ services:
     
     # PHP Service
     app:
-        build: ./.config/php
+        build: ./config/php
         container_name: CORE_PHP
         restart: unless-stopped
         tty: true
         env_file:
-            - "./.env"
+            - ".env"
         networks:
             - app-network
         volumes:
             - "./www:/var/www"
-            - "./config/php-fpm/php.ini:/usr/local/etc/php/php.ini:ro"
+            - "./config/php/local.ini:/usr/local/etc/php/conf.d/local.ini"
 
     # Nginx Service
     webserver:
@@ -27,10 +27,8 @@ services:
         networks:
             - app-network
         volumes:
-            - "./www:/var/www"
-            - "./.config/nginx/nginx.conf:/etc/nginx/nginx.conf:ro"
-            - "./.config/nginx/conf.d/:/etc/nginx/conf.d/:ro"
-            # - "./.config/nginx/.htpasswd:/etc/nginx/.htpasswd:ro"
+            - "./config/nginx/nginx.conf:/etc/nginx/nginx.conf:ro"
+            - "./config/nginx/conf.d/:/etc/nginx/conf.d/:ro"
 
     #MySQL Service
     mysql:
@@ -41,13 +39,12 @@ services:
         ports:
             - "3306:3306"
         environment:
-            MYSQL_DATABASE: test
             MYSQL_ROOT_PASSWORD: HotBoy
         networks:
             - app-network
         volumes:
             - dbdata:/var/lib/mysql
-            - "./.config/mysql/my.cnf:/etc/mysql/my.cnf"
+            - "./config/mysql/my.cnf:/etc/mysql/my.cnf"
 
 #Docker Networks
 networks:
