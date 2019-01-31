@@ -1,1 +1,0 @@
-2019/01/30 09:33:31 [error] 8#8: *2 directory index of "/var/www/admin/" is forbidden, client: 172.27.0.1, server: admin.local, request: "GET / HTTP/1.1", host: "admin.local"
