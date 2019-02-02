@@ -221,3 +221,24 @@ Route::domain('{account}.myapp.com')->group(function(){
         });
 });
 ```
+
+Route Prefixes
+
+```php
+Route::prefix('admin')->group(function(){
+        Route::get('users', function(){
+                // Matches the "/admin/users" URL
+        })
+});
+```
+
+
+Route Name Prefixes
+
+```php
+Route::name('admin.')->group(function(){
+        Route::get('users', function(){
+                // admin.users
+        })->name('users');
+});
+```
