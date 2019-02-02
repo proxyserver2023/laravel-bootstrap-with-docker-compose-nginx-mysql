@@ -66,7 +66,7 @@ CSRF Protection
 
 ```php
 <form method="POST" action="/profile">
-        {{csrf_token}}
+        @csrf
 </form>
 ```
 
@@ -241,4 +241,73 @@ Route::name('admin.')->group(function(){
                 // admin.users
         })->name('users');
 });
+```
+
+Route Model Binding - Implicit Binding
+
+```php
+Route::get('api/users/{user}', function (App\User $user){
+        return $user->email;
+});
+
+// Customizing the key name
+public function getRouteKeyName() {
+        return 'slug';
+}
+```
+
+Explicit Binding
+
+```php
+public function boot() {
+        parent::boot();
+        Route::model('user', App\User::class);
+}
+
+Route::get('profile/{user}', function(App\User $user){});
+```
+
+```php
+public function boot(){
+        parent::boot();
+        Route::bind('user', function($value){
+                return App\User::where('name', $value)->first() ?? abort(404);
+        });
+}
+```
+
+Rate Limiting
+
+```php
+Route::middleware('auth:api', 'throttle:60,1')->group(function() {
+        Route::get('/user', function(){
+                //
+        });
+});
+```
+
+Form Method Spoofing
+
+```html
+<form action="/foo/bar" method="POST">
+        <input type="hidden" name="_method" value="PUT">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+</form>
+```
+
+Or, If you use blade templates
+
+```php
+<form action="/foo/bar" method="POST">
+        @method('PUT')
+        @csrf
+</form>
+```
+
+Accessing the current route
+
+```php
+$route = Route::current();
+$name = Route::currentRouteName();
+$action = Route::currentRouteAction();
 ```
