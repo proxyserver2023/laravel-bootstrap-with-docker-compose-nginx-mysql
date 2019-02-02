@@ -153,3 +153,37 @@ Route::get('search/{search}', function ($search) {
         return $search;
 })->where('search', '.*');
 ```
+
+- Named Routes
+
+```php
+Route::get('user/profile', function() {
+
+})->name('profile');
+```
+
+```php
+// Generating URLs to named routes
+$url = route('profile');
+
+// Generating Redirects
+return redirect()->route('profile');
+```
+
+```php
+Route::get('user/{id}/profile', function($id){
+
+})->name('profile');
+
+$url = route('profile', ['id'=>1]);
+```
+
+```php
+public function handle($request, Closure $next) {
+        if ($request->route()->named('profile')) {
+                //
+        }
+
+        return $next($request);
+}
+```
