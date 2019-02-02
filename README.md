@@ -90,3 +90,66 @@ Route::view('<path>', '<view-name>', [
         '<variable-name>' => '<variable-value>',
 ]);
 ```
+
+- Required params
+
+```php
+Route::get('user/{id}', function ($id) {
+    return 'User '.$id;
+});
+```
+
+```php
+Route::get('posts/{post}/comments/{comment}', function ($postId, $commentId) {
+    //
+});
+```
+
+- optional parameter
+
+```php
+Route::get('user/{name?}', function ($name = null) {
+    return $name;
+});
+
+Route::get('user/{name?}', function ($name = 'John') {
+    return $name;
+});
+```
+
+- Regular Expression Constraints
+
+```php
+Route::get('user/{name}', function ($name){
+        //
+})->where('name', '[A-Za-z]+');
+
+Route::get('user/{id}', function($id){
+        //
+})->where('id', '[0-9]+');
+
+Route::get('user/{id}/{name}', function ($id, $name) {
+    //
+})->where(['id' => '[0-9]+', 'name' => '[a-z]+']);
+```
+
+- Global Constraints
+
+```php
+public function boot() {
+        Route::pattern('id', '[0-9]+');
+        parent::boot();
+}
+
+Route::get('user/{id}', function ($id){
+        // only executed if id is numeric
+})
+```
+
+- Encoded Forward Slashes
+
+```php
+Route::get('search/{search}', function ($search) {
+        return $search;
+})->where('search', '.*');
+```
