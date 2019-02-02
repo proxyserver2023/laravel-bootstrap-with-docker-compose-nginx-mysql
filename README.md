@@ -62,27 +62,27 @@ Route::match(['get', 'post'], '/', function() {
 });
 ```
 
-- CSRF Protection
+CSRF Protection
 
 ```php
 <form method="POST" action="/profile">
-        @csrf
+        {{csrf_token}}
 </form>
 ```
 
-- Redirect Routes; returns a `302`
+Redirect Routes; returns a `302`
 
 ```php
 Route::redirect('/here', '/there');
 ```
 
-- Redirect Routes; returns custom status code
+Redirect Routes; returns custom status code
 
 ```php
 Route::redirect('/here', '/there', 301);
 ```
 
-- View Routes
+View Routes
 
 ```php
 Route::view('/welcome', 'welcome');
@@ -91,7 +91,7 @@ Route::view('<path>', '<view-name>', [
 ]);
 ```
 
-- Required params
+Required params
 
 ```php
 Route::get('user/{id}', function ($id) {
@@ -105,7 +105,7 @@ Route::get('posts/{post}/comments/{comment}', function ($postId, $commentId) {
 });
 ```
 
-- optional parameter
+optional parameter
 
 ```php
 Route::get('user/{name?}', function ($name = null) {
@@ -117,7 +117,7 @@ Route::get('user/{name?}', function ($name = 'John') {
 });
 ```
 
-- Regular Expression Constraints
+Regular Expression Constraints
 
 ```php
 Route::get('user/{name}', function ($name){
@@ -133,7 +133,7 @@ Route::get('user/{id}/{name}', function ($id, $name) {
 })->where(['id' => '[0-9]+', 'name' => '[a-z]+']);
 ```
 
-- Global Constraints
+Global Constraints
 
 ```php
 public function boot() {
@@ -146,7 +146,7 @@ Route::get('user/{id}', function ($id){
 })
 ```
 
-- Encoded Forward Slashes
+Encoded Forward Slashes
 
 ```php
 Route::get('search/{search}', function ($search) {
@@ -154,7 +154,7 @@ Route::get('search/{search}', function ($search) {
 })->where('search', '.*');
 ```
 
-- Named Routes
+Named Routes
 
 ```php
 Route::get('user/profile', function() {
@@ -186,4 +186,38 @@ public function handle($request, Closure $next) {
 
         return $next($request);
 }
+```
+
+Middleware For Route Group
+
+```php
+Route::middleware(
+        ['first', 'second', 'third']
+)->group(function(){
+        Route::get('/', function(){
+
+        });
+
+        Route::get('', function(){
+
+        });
+});
+```
+
+Namespaces
+
+```php
+Route::namespace('Admin')->group(function(){
+        // Controllers Within The "App\Http\Controllers\Admin" Namespace
+});
+```
+
+Route Sub-domain
+
+```php
+Route::domain('{account}.myapp.com')->group(function(){
+        Route::get('user/{id}', function($account, $id){
+
+        });
+});
 ```
